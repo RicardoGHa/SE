@@ -11,7 +11,8 @@
     "postbuild": "echo \"Finnished build with size: $(du -sh build | cut f1)\"",
     "prestart": "npm run build",
     "start": "node build/index.js",
-    "dev": "ts-node-dev --respawn src/index.ts"
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "test": "jest"
   },
   "keywords": [],
   "author": "Rick",

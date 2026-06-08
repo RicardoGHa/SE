@@ -35,29 +35,33 @@ export interface Order {
 export class OrderManagement {
     // get orders, store orders, and add orders
     private orders: Order[] = [];
-    constructor(private validator: IValidator, private calculator: ICalculator){
+    constructor(private validator: IValidator, private calculator: ICalculator) {
 
     }
     getOrders() {
         return this.orders;
     }
     addOrder(item: string, price: number) {
-        const order: Order = {id: this. orders.length + 1, item, price}
-        this.validator.validate(order);
-        this.orders.push({ id: this.orders.length + 1, item, price });
+        try {
+            const order: Order = { id: this.orders.length + 1, item, price }
+            this.validator.validate(order);
+            this.orders.push({ id: this.orders.length + 1, item, price });
+        } catch(error: any) {
+            throw new Error("[OrderManagement] error adding order: " + error.message);
+        }
     }
     getOrder(id: number) {
         return this.getOrders().find(order => order.id === id);
     }
-    getTotalRevenue(){
+    getTotalRevenue() {
         return this.calculator.getRevenue(this.orders);
     }
-    getBuyPower(){
+    getBuyPower() {
         return this.calculator.getAverageBuyPower(this.orders)
     }
 }
 
-export class PremiumOrderManagement extends OrderManagement{
+export class PremiumOrderManagement extends OrderManagement {
     //LSP, kel shi l OrderManagement edra ta3mlo, hal class PremiumOrderManagement fiya ta3mlo bas bet 3addil 3le
     getOrder(id: number): Order | undefined {
         console.log("ALERT: Premium order being fetched");
@@ -82,12 +86,12 @@ interface IValidator {
 }
 // hon l sha5s l mottar enno yesta3mol IPossibleItems byesta3mela matra7 ma bado yeha, mesh 3and l kel
 // fa azbat nkattir l interfaces a7sa ma n7ottoun bi we7de w na3mol cluster of methods l be2e ma 7a y3ouzouwoun
-interface IPossibleItems{
+interface IPossibleItems {
     getPossibleItems(): string[];
 }
 
 export class Validator implements IValidator {
-    constructor(private rules: IValidator[]){
+    constructor(private rules: IValidator[]) {
 
     }
 
@@ -132,19 +136,19 @@ export class MaxPriceValidator implements IValidator {
 
 }
 
-interface ICalculator { 
+interface ICalculator {
     getRevenue(orders: Order[]): number;
     getAverageBuyPower(orders: Order[]): number;
 }
 
 
-export class FinanceClaculator implements ICalculator{
+export class FinanceClaculator implements ICalculator {
     static getAverageByPower(orders: { id: number; item: string; price: number; }[]): any {
-      throw new Error("Method not implemented.");
+        throw new Error("Method not implemented.");
     }
     static getRevenue(orders: { id: number; item: string; price: number; }[]): any {
-      throw new Error("Method not implemented.");
-    } 
+        throw new Error("Method not implemented.");
+    }
     // calculate total revenue and average buy power
     public getRevenue(orders: Order[]) {
         return orders.reduce((total, order) => total + order.price, 0);
