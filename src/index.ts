@@ -6,13 +6,30 @@
 // logger.info(`my name is ${firstname}`)
 // logger.info("secret is ", config.secret)
 
-
+main();
 export default {
   NODE_ENV: process.env.NODE_ENV || 'development', // Checks if the environment type (e.g., 'production' or 'development') is set; if not, it uses 'development' as default.
   logDir: 'logs', // Specifies the folder where log files will be saved.
 };
 import { FinanceClaculator, ItemValidator, MaxPriceValidator, OrderManagement, PriceValidator, Validator } from "./app-clean";
 import logger from "./util/logger";
+import path from 'path';
+import {parseCSV} from './util/parser'
+
+const filePath = path.resolve(__dirname, './data/Cake orders.csv');
+
+async function main() {
+    try {
+        const products = await parseCSV(filePath)
+        for (const product of products) {
+            logger.info(product + '\n');
+        }
+    } catch(error) {
+        logger.error(error)
+    }
+}
+
+
 
 const orders = [
   { id: 1, item: "Sponge", price: 15 },
@@ -41,10 +58,10 @@ const newPrice = 22;
 logger.info("Orders after adding a new order: %o", orderManager.getOrders());
 
 // Calculate Total Revenue directly
-logger.info("Total Revenue:" + FinanceClaculator.getRevenue(orders));
+logger.info("Total Revenue:" + orderManager.getTotalRevenue());
 
 // Calculate Average Buy Power directly
-logger.info("Average Buy Power:" + FinanceClaculator.getAverageByPower(orders));
+logger.info("Average Buy Power:" + orderManager.getBuyPower());
 
 // Fetching an order directly
 const fetchId = 2;

@@ -151,12 +151,6 @@ interface ICalculator {
 
 
 export class FinanceClaculator implements ICalculator {
-    static getAverageByPower(orders: { id: number; item: string; price: number; }[]): any {
-        throw new Error("Method not implemented.");
-    }
-    static getRevenue(orders: { id: number; item: string; price: number; }[]): any {
-        throw new Error("Method not implemented.");
-    }
     // calculate total revenue and average buy power
     public getRevenue(orders: Order[]) {
         return orders.reduce((total, order) => total + order.price, 0);

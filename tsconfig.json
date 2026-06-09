@@ -4,9 +4,7 @@
         "module": "commonjs",
         "strict": true,
         "types": ["node", "jest"],
-        "baseUrl": "./src",
         "rootDir": "./src",
-        "ignoreDeprecations": "6.0",
         "outDir": "build",
         "sourceMap": true,
         "esModuleInterop": true
