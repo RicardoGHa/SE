@@ -1,5 +1,7 @@
 // SOLID PRINCIPLES
 
+import logger from "./util/logger";
+
 //Single Responsability Principle (SRP)
 
 //ya3ane kel module 3ande yeha bado ykoun 3anda 1/single responsabilty
@@ -51,7 +53,11 @@ export class OrderManagement {
         }
     }
     getOrder(id: number) {
-        return this.getOrders().find(order => order.id === id);
+        const order = this.getOrders().find(order => order.id === id);
+        if(!order){
+            logger.warn(`Order with ID ${id} not Found`)
+        }
+        return order;
     }
     getTotalRevenue() {
         return this.calculator.getRevenue(this.orders);
@@ -115,6 +121,7 @@ export class ItemValidator implements IValidator {
     ];
     validate(order: Order) {
         if (!ItemValidator.possibleItems.includes(order.item)) {
+            logger.error(`Invalid Item: ${order.item}`)
             throw new Error(`Invalid item. Must be one of: ${ItemValidator.possibleItems.join(", ")}`);
 
         }
@@ -123,6 +130,7 @@ export class ItemValidator implements IValidator {
 export class PriceValidator implements IValidator {
     validate(order: Order) {
         if (order.price <= 0) {
+            logger.error(`Price is negative ${order.item}`)
             throw new Error("Price must be greater than zero");
         }
     }

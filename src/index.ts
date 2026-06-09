@@ -3,11 +3,16 @@
 
 // firstname = "rick";
 
-// console.log(`my name is ${firstname}`)
-// console.log("secret is ", config.secret)
+// logger.info(`my name is ${firstname}`)
+// logger.info("secret is ", config.secret)
 
 
-import { FinanceClaculator, ItemValidator, MaxPriceValidator, OrderManagement, PriceValidator, Validator } from "app-clean";
+export default {
+  NODE_ENV: process.env.NODE_ENV || 'development', // Checks if the environment type (e.g., 'production' or 'development') is set; if not, it uses 'development' as default.
+  logDir: 'logs', // Specifies the folder where log files will be saved.
+};
+import { FinanceClaculator, ItemValidator, MaxPriceValidator, OrderManagement, PriceValidator, Validator } from "./app-clean";
+import logger from "./util/logger";
 
 const orders = [
   { id: 1, item: "Sponge", price: 15 },
@@ -18,13 +23,13 @@ const orders = [
 ];
 
 const rules = [
-        new PriceValidator(),
-        new MaxPriceValidator(),
-        new ItemValidator(),
-    ]
+  new PriceValidator(),
+  new MaxPriceValidator(),
+  new ItemValidator(),
+]
 
 const orderManager = new OrderManagement(new Validator(rules), new FinanceClaculator);
-for(const order of orders){
+for (const order of orders) {
   orderManager.addOrder(order.item, order.price);
 }
 // Adding a new order directly
@@ -33,20 +38,20 @@ const newPrice = 22;
 
 
 
-console.log("Orders after adding a new order:", orderManager.getOrders());
+logger.info("Orders after adding a new order: %o", orderManager.getOrders());
 
 // Calculate Total Revenue directly
-console.log("Total Revenue:", FinanceClaculator.getRevenue(orders));
+logger.info("Total Revenue:" + FinanceClaculator.getRevenue(orders));
 
 // Calculate Average Buy Power directly
-console.log("Average Buy Power:", FinanceClaculator.getAverageByPower(orders));
+logger.info("Average Buy Power:" + FinanceClaculator.getAverageByPower(orders));
 
 // Fetching an order directly
 const fetchId = 2;
 const fetchedOrder = orderManager.getOrder(fetchId)
-console.log("Order with ID 2:", fetchedOrder);
+logger.info("Order with ID 2: %o", fetchedOrder);
 
 // Attempt to fetch a non-existent order
 const nonExistentId = 10;
 const nonExistentOrder = orderManager.getOrder(nonExistentId)
-console.log("Order with ID 10 (non-existent):", nonExistentOrder);
+logger.info("Order with ID 10 (non-existent):" + nonExistentOrder);
