@@ -20,6 +20,7 @@
   "type": "commonjs",
   "dependencies": {
     "dotenv": "^17.4.2",
+    "fast-xml-parser": "^5.8.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^6.0.3",

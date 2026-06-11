@@ -48,8 +48,8 @@ export class OrderManagement {
             const order: Order = { id: this.orders.length + 1, item, price }
             this.validator.validate(order);
             this.orders.push({ id: this.orders.length + 1, item, price });
-        } catch(error: any) {
-            throw new Error("[OrderManagement] error adding order: " + error.message);
+        } catch(error: unknown) {
+            throw new Error("[OrderManagement] error adding order: " + (error as Error).message);
         }
     }
     getOrder(id: number) {
