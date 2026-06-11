@@ -92,9 +92,9 @@ interface IValidator {
 }
 // hon l sha5s l mottar enno yesta3mol IPossibleItems byesta3mela matra7 ma bado yeha, mesh 3and l kel
 // fa azbat nkattir l interfaces a7sa ma n7ottoun bi we7de w na3mol cluster of methods l be2e ma 7a y3ouzouwoun
-interface IPossibleItems {
-    getPossibleItems(): string[];
-}
+// interface IPossibleItems {
+//     getPossibleItems(): string[];
+// }
 
 export class Validator implements IValidator {
     constructor(private rules: IValidator[]) {
