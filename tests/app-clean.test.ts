@@ -81,7 +81,7 @@ describe("OrderManagement", () => {
         });
 
         //act and assert
-        expect(() => orderManager.addOrder(item, price)).toThrow("[OrderManagement] error adding order: Invalid Order");
+        expect(() => orderManager.addOrder(item, price)).toThrow("[OrderManagement] error adding order: Invalid order");
     })
 })
 

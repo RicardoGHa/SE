@@ -49,7 +49,8 @@ export class OrderManagement {
             this.validator.validate(order);
             this.orders.push({ id: this.orders.length + 1, item, price });
         } catch(error: unknown) {
-            throw new Error("[OrderManagement] error adding order: " + (error as Error).message);
+            const message = error instanceof Error ? error.message : String(error);
+            throw new Error("[OrderManagement] error adding order: " + message, { cause: error });
         }
     }
     getOrder(id: number) {
@@ -160,4 +161,3 @@ export class FinanceClaculator implements ICalculator {
         return orders.length === 0 ? 0 : this.getRevenue(orders) / orders.length;
     }
 }
-

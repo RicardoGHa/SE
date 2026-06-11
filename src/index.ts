@@ -41,20 +41,3 @@ async function main() {
   }
 }
 main();
-
-
-    it("should reject a CSV file with an unclosed quote", async () => {
-        // Arrange
-        const filePath = path.join(process.cwd(), "logs/fixtures/unclosed-quote.csv");
-
-        // Act and Assert
-        await expect(parseCSV(filePath)).rejects.toThrow("CSV contains an unclosed quote");
-    });
-
-    it("should reject missing CSV files", async () => {
-        // Arrange
-        const filePath = path.join(process.cwd(), "logs/fixtures/missing.csv");
-
-        // Act and Assert
-        await expect(parseCSV(filePath)).rejects.toThrow("Unable to read CSV file");
-    });
