@@ -8,7 +8,7 @@ export class Cake implements Item {
     private type: string;
     private flavor: string;
     private filling: string;
-    private size: string;
+    private size: number;
     private layers: number;
     private frostingType: string;
     private frostingFlavor: string;
@@ -20,7 +20,7 @@ export class Cake implements Item {
     private specialIngredients: string;
     private packagingType: string;
 
-    constructor(type: string, flavor: string, filling: string, size: string, layers: number, frostingType: string, frostingFlavor: string, decorationType: string, decorationColor: string, customMessage: string, shape: string, allergies: string, specialIngredients: string, packagingType: string) {
+    constructor(type: string, flavor: string, filling: string, size: number, layers: number, frostingType: string, frostingFlavor: string, decorationType: string, decorationColor: string, customMessage: string, shape: string, allergies: string, specialIngredients: string, packagingType: string) {
         
         this.type = type;
         this.flavor = flavor;
@@ -51,7 +51,7 @@ export class Cake implements Item {
         return this.filling;
     }
 
-    getSize(): string {
+    getSize(): number {
         return this.size;
     }
 
