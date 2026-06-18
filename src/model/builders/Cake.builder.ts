@@ -14,7 +14,12 @@ export class CakeBuilder {
     private shape!: string;
     private allergies!: string;
     private specialIngredients!: string;
-    private packagingType!  : string;
+    private packagingType!: string;
+
+    public static newBuilder(): CakeBuilder {
+        return new CakeBuilder();
+    }
+
     setType(type: string): CakeBuilder {
         this.type = type;
         return this;
@@ -82,18 +87,21 @@ export class CakeBuilder {
             this.frostingFlavor,
             this.decorationType,
             this.decorationColor,
-            this.customMessage,
             this.shape,
             this.allergies,
             this.specialIngredients,
             this.packagingType
         ];
-       for (const property of requiredProperties) {
-        if (!property) {
-            console.error('Required properties are missing, you cant build a cake');
-            throw new Error('Required properties are missing');
+        for (const property of requiredProperties) {
+            if (property === undefined || property === null || property === "") {
+                console.error('Required properties are missing, you cant build a cake');
+                throw new Error('Required properties are missing');
+            }
         }
-       }
+        if (Number.isNaN(this.size) || Number.isNaN(this.layers)) {
+            console.error('Cake size and layers must be valid numbers');
+            throw new Error('Cake size and layers must be valid numbers');
+        }
         return new Cake(
             this.type,
             this.flavor,

@@ -1,24 +1,15 @@
-import { Cake } from "./model/Cake.model";
-import { CakeBuilder } from "./model/builders/Cake.builder";
+import { parseCSV } from "./util/parser";
+import { CSVCakeMapper } from "./mappers/Cake.mapper";
+import logger from "./util/logger";
+import { CSVOrderMapper } from "./mappers/Order.mapper";
 
 async function main() {
-    const cakeBuilder = new CakeBuilder();
-    const cake = cakeBuilder.setType("type")
-        .setFlavor("flavor")
-        .setFilling("filling")
-        .setSize(10)
-        .setLayers(2)
-        .setFrostingType("frostingType")
-        .setFrostingFlavor("frostingFlavor")
-        .setDecorationType("decorationType")
-        .setDecorationColor("decorationColor")
-        .setCustomMessage("customMessage")
-        .setShape("shape")
-        .setAllergies("allergies")
-        .setSpecialIngredients("specialIngredients")
-        .setPackagingType("packagingType")
-        .build();
-    console.log(cake);
+    const data = await parseCSV("src/data/cake orders.csv");
+    const cakeMapper = new CSVCakeMapper();
+    data.shift(); // remove header row
+    const orderMapper = new CSVOrderMapper(cakeMapper);
+    const orders = data.map(row => orderMapper.map(row));
+    logger.info("list of Orders: \n %o", orders);
 }
 
 main();

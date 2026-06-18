@@ -1,5 +1,14 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, jest } from "@jest/globals"
-import { FinanceClaculator, Order, OrderManagement, Validator } from "../src/app-clean"
+import {
+    FinanceClaculator,
+    ItemValidator,
+    MaxPriceValidator,
+    Order,
+    OrderManagement,
+    PremiumOrderManagement,
+    PriceValidator,
+    Validator,
+} from "../src/app-clean"
 
 describe("OrderManagement", () => {
     // Before all. new validator and new calculator
@@ -81,7 +90,55 @@ describe("OrderManagement", () => {
         });
 
         //act and assert
-        expect(() => orderManager.addOrder(item, price)).toThrow("[OrderManagement] error adding order: Invalid Order");
+        expect(() => orderManager.addOrder(item, price)).toThrow("[OrderManagement] error adding order: Invalid order");
+    })
+
+    it("should return undefined when an order does not exist", () => {
+        expect(orderManager.getOrder(99)).toBeUndefined();
+    })
+
+    it("should calculate average buy power", () => {
+        orderManager.addOrder("Sponge", 10);
+        orderManager.addOrder("Chocolate", 20);
+
+        expect(orderManager.getBuyPower()).toBe(15);
+    })
+
+    it("should fetch premium orders through the base behavior", () => {
+        const premiumOrderManager = new PremiumOrderManagement(validator, calc);
+        premiumOrderManager.addOrder("Sponge", 15);
+
+        expect(premiumOrderManager.getOrder(1)).toEqual({ id: 1, item: "Sponge", price: 15 });
+    })
+})
+
+describe("Validators", () => {
+    it("should run all validator rules", () => {
+        const order = { id: 1, item: "Sponge", price: 15 };
+        const itemValidator = new ItemValidator();
+        const priceValidator = new PriceValidator();
+        const maxPriceValidator = new MaxPriceValidator();
+        const validator = new Validator([itemValidator, priceValidator, maxPriceValidator]);
+
+        expect(() => validator.validate(order)).not.toThrow();
+    })
+
+    it("should reject invalid item names", () => {
+        const validator = new ItemValidator();
+
+        expect(() => validator.validate({ id: 1, item: "Pizza", price: 15 })).toThrow("Invalid item");
+    })
+
+    it("should reject prices less than or equal to zero", () => {
+        const validator = new PriceValidator();
+
+        expect(() => validator.validate({ id: 1, item: "Sponge", price: 0 })).toThrow("Price must be greater than zero");
+    })
+
+    it("should reject prices over the maximum", () => {
+        const validator = new MaxPriceValidator();
+
+        expect(() => validator.validate({ id: 1, item: "Sponge", price: 101 })).toThrow("Price must be less than 100");
     })
 })
 
@@ -100,5 +157,10 @@ describe("FinanceCalculator", () => {
 
         expect(revenue).toEqual(86)
     });
-    // halla2 l average but power
+
+    it("should return zero average buy power with no orders", () => {
+        const calc = new FinanceClaculator();
+
+        expect(calc.getAverageBuyPower([])).toBe(0);
+    });
 })
