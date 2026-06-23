@@ -1,13 +1,12 @@
 import { OrderBuilder } from "../model/builders/Order.builder";
 import { IItem } from "../model/IItem";
 import { IOrder } from "../model/IOrder";
-import { Order } from "../model/Order.model";
-import { CSVCakeMapper } from "./Cake.mapper";
 import { IMapper } from "./IMapper";
 
 export class CSVOrderMapper implements IMapper<string[], IOrder> {
-    constructor(private itemMapper: IMapper<string[], IItem>){
+    constructor(private itemMapper: IMapper<string[], IItem>) {
     }
+
     map(data: string[]): IOrder {
         const item: IItem = this.itemMapper.map(data);
 
@@ -17,5 +16,15 @@ export class CSVOrderMapper implements IMapper<string[], IOrder> {
             .setPrice(parseInt(data[data.length - 2]))
             .setItem(item)
             .build()
+    }
+    reverseMap(data: IOrder): string[] {
+        const item = this.itemMapper.reverseMap(data.getItem());
+        return [
+            data.getId(),
+            ...item,
+            data.getPrice().toString(),
+            data.getQuantity().toString()
+
+        ]
     }
 }

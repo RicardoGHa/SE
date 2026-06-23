@@ -1,15 +1,15 @@
-import { parseCSV } from "./util/parser";
-import { CSVCakeMapper } from "./mappers/Cake.mapper";
+
 import logger from "./util/logger";
-import { CSVOrderMapper } from "./mappers/Order.mapper";
+import { CakeOrderRepository } from "./repository/file/Cake.order.repository";
+import config from "./config";
 
 async function main() {
-    const data = await parseCSV("src/data/cake orders.csv");
-    const cakeMapper = new CSVCakeMapper();
-    data.shift(); // remove header row
-    const orderMapper = new CSVOrderMapper(cakeMapper);
-    const orders = data.map(row => orderMapper.map(row));
-    logger.info("list of Orders: \n %o", orders);
+    const path = config.storagePath.csv ;
+
+    const repository = new CakeOrderRepository(path);
+    const data = await repository.get("17");
+
+    logger.info("list of Orders: \n %o", data);
 }
 
 main();

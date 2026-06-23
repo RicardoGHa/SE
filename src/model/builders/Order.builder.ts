@@ -27,8 +27,11 @@ export class OrderBuilder {
         return this;
     }
     build(): Order {
-        if (!this.id || !this.item || !this.price || !this.quantity) {
+        if (!this.id || !this.item || this.price === undefined || this.quantity === undefined) {
             throw new Error('Missing required fields');
+        }
+        if (Number.isNaN(this.price) || Number.isNaN(this.quantity)) {
+            throw new Error('Order price and quantity must be valid numbers');
         }
         return new Order(this.id, this.item, this.price, this.quantity);
     }

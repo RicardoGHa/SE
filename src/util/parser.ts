@@ -1,5 +1,6 @@
 // src/utils/parser.ts
 import fs from 'fs'; 
+import { stringify as csvStringify } from 'csv-stringify';
 import logger from './logger';
 
 export const parseCSV = (filePath: string): Promise<string[][]> => {
@@ -26,4 +27,23 @@ export const parseCSV = (filePath: string): Promise<string[][]> => {
       reject(error); // Reject the promise if an error occurs
     });
   });
+};
+
+export const writeCSVFile = async (filePath: string, data: string[][]): Promise<void> => {
+  try {
+    const csvContent = await new Promise<string>((resolve, reject) => {
+      csvStringify(data, (err, output) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(output);
+      });
+    });
+    await fs.promises.writeFile(filePath, csvContent, "utf-8");
+  } catch (error) {
+    const wrappedError = new Error(`Error writing csv file: ${error}`);
+    (wrappedError as Error & { cause: unknown }).cause = error;
+    throw wrappedError;
+  }
 };

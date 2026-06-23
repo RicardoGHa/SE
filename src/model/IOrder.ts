@@ -4,5 +4,5 @@ export interface IOrder {
     getItem(): IItem;
     getQuantity(): number;
     getPrice(): number;
-    getId(): string
+    getId(): string;
 }
