@@ -1,19 +1,18 @@
-import { IItem } from "../IItem";
-import { Order } from "../Order.model";
+import { IIdentifiableItem, IItem } from "../IItem";
+import { IIdentifiableOrderItem } from "../IOrder";
+import { IdentifiableOrderItem, Order } from "../Order.model";
 
 export class OrderBuilder {
-    private id!: string;
+
     private item!: IItem;
     private price!: number;
     private quantity!: number;
-    
+    private id!: string;
+
     public static newBuilder(): OrderBuilder {
         return new OrderBuilder();
     }
-    setId(id: string): OrderBuilder {
-        this.id = id;
-        return this;
-    }
+
     setItem(item: IItem): OrderBuilder {
         this.item = item;
         return this;
@@ -26,6 +25,11 @@ export class OrderBuilder {
         this.quantity = quantity;
         return this;
     }
+
+    setId(id: string): OrderBuilder {
+        this.id = id;
+        return this;
+    }
     build(): Order {
         if (!this.id || !this.item || this.price === undefined || this.quantity === undefined) {
             throw new Error('Missing required fields');
@@ -35,4 +39,31 @@ export class OrderBuilder {
         }
         return new Order(this.id, this.item, this.price, this.quantity);
     }
+}
+
+export class IdentifiableOrderItemBUilder {
+
+    private item!: IIdentifiableItem;
+    private order!: Order;
+
+    static newBuilder(): IdentifiableOrderItemBUilder {
+        return new IdentifiableOrderItemBUilder;
+    }
+
+    setItem(item: IIdentifiableItem): IdentifiableOrderItemBUilder {
+        this.item = item;
+        return this;
+    }
+    setOrder(order: Order): IdentifiableOrderItemBUilder {
+        this.order = order;
+        return this
+    }
+    
+    build(): IIdentifiableOrderItem {
+        if (!this.item || !this.order ) {
+            throw new Error('Missing required properties to build an Identifiable Order');
+        }
+        return new IdentifiableOrderItem( this.item, this.order.getPrice(), this.order.getQuantity(), this.order.getId(),);
+    }
+
 }

@@ -1,7 +1,7 @@
 import { IOrder } from "../../model/IOrder";
 import { InvalidItemException, ItemsNotFoundException } from "../../util/exceptions/repositoryException";
 import logger from "../../util/logger";
-import { ID, IRepository } from "../IRepository";
+import { IRepository } from "../IRepository";
 
 export abstract class OrderRepository implements IRepository<IOrder> {
 
@@ -68,4 +68,3 @@ export abstract class OrderRepository implements IRepository<IOrder> {
         logger.info(`Successfully deleted order of id ${id}`);
     }
 }
-

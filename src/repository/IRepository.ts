@@ -1,7 +1,15 @@
 export type id = string;
-
 export interface ID{
     getId(): id;
+}
+
+export interface Initializable {
+    /**
+     * Initialize repository resources.
+     * Creates required tables and establishes a connection.
+     * Throws an InitializationException on failure.
+     */
+    init(): Promise<void>;
 }
 
 export interface IRepository<T extends ID> {
@@ -15,3 +23,5 @@ export interface IRepository<T extends ID> {
     // Throw item not found
     delete(id: id): Promise<void>;
 }
+
+export interface InitializableRepository<T extends ID> extends IRepository<T>, Initializable  {}

@@ -1,10 +1,13 @@
-import { IItem, ItemCategory } from "./IItem";
+import { id } from "../repository/IRepository";
+import { IIdentifiableItem, IItem, ItemCategory } from "./IItem";
+
+
 
 export class Cake implements IItem {
     getCategory(): ItemCategory {
         return ItemCategory.CAKE;
     }
-    
+
     private type: string;
     private flavor: string;
     private filling: string;
@@ -21,7 +24,7 @@ export class Cake implements IItem {
     private packagingType: string;
 
     constructor(type: string, flavor: string, filling: string, size: number, layers: number, frostingType: string, frostingFlavor: string, decorationType: string, decorationColor: string, customMessage: string, shape: string, allergies: string, specialIngredients: string, packagingType: string) {
-        
+
         this.type = type;
         this.flavor = flavor;
         this.filling = filling;
@@ -37,7 +40,7 @@ export class Cake implements IItem {
         this.specialIngredients = specialIngredients;
         this.packagingType = packagingType;
     }
-    
+
 
     getType(): string {
         return this.type;
@@ -74,7 +77,7 @@ export class Cake implements IItem {
     getDecorationColor(): string {
         return this.decorationColor;
     }
-    
+
     getCustomMessage(): string {
         return this.customMessage;
     }
@@ -94,4 +97,30 @@ export class Cake implements IItem {
     getPackagingType(): string {
         return this.packagingType;
     }
+}
+
+export class IdentifiableCake extends Cake implements IIdentifiableItem {
+
+    constructor(private id: id,
+                type: string,
+                flavor: string,
+                filling: string,
+                size: number,
+                layers: number,
+                frostingType: string,
+                frostingFlavor: string,
+                decorationType: string,
+                decorationColor: string,
+                customMessage: string,
+                shape: string,
+                allergies: string,
+                specialIngredients: string,
+                packagingType: string) {
+        super(type, flavor, filling, size, layers, frostingType, frostingFlavor, decorationType, decorationColor, customMessage, shape, allergies, specialIngredients, packagingType)
+    }
+
+    getId(): id {
+        return this.id
+    }
+
 }
