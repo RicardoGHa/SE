@@ -4,9 +4,7 @@ import logger from "../../util/logger";
 import { DbException, InitalizationException } from "../../util/exceptions/repositoryException";
 import { ConnectionManager } from "./ConnectionManager";
 import { IIdentifiableItem } from "../../model/IItem";
-import { IdentifiableOrderItem } from "../../model/Order.model";
 import { SQLiteOrder, SQLiteOrderMapper } from "../../mappers/Order.mapper";
-import { connect } from "tls";
 
 
 const CREATE_TABLE = `CREATE TABLE IF NOT EXISTS "order"(
@@ -146,7 +144,13 @@ export class OrderRepository implements IRepository<IIdentifiableOrderItem>, Ini
             await conn.exec("BEGIN TRANSACTION");
             await this.itemRepository.update(order.getItem());
 
-            await conn.run(UPDATE_ID, order.getId(), order.getQuantity(), order.getPrice(), order.getItem().getCategory(), order.getItem().getId());
+            await conn.run(UPDATE_ID, [
+                order.getQuantity(),
+                order.getPrice(),
+                order.getItem().getCategory(),
+                order.getItem().getId(),
+                order.getId()
+            ]);
             await conn.exec("COMMIT");
         } catch (error: unknown) {
             logger.error("Failed to update Order of id %s %o", order.getId(), error as Error);
@@ -163,7 +167,11 @@ export class OrderRepository implements IRepository<IIdentifiableOrderItem>, Ini
             try {
                 conn = await ConnectionManager.getConnection();
                 await conn.exec("BEGIN TRANSACTION");
-                await this.itemRepository.delete(id);
+                const result = await conn.get<SQLiteOrder>(SELECT_BY_ID, id);
+                if (!result) {
+                    throw new Error("Order of id" + id + "not found");
+                }
+                await this.itemRepository.delete(result.item_id);
 
                 await conn.run(DELETE_ID, id);
                 await conn.exec("COMMIT");

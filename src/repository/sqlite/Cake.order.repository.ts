@@ -1,5 +1,4 @@
 
-import { error } from "winston";
 import { SQLiteCake, SQLiteCakeMapper } from "../../mappers/Cake.mapper";
 import { IdentifiableCake } from "../../model/Cake.model";
 import { ItemCategory } from "../../model/IItem";
